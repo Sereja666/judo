@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>главная страница</title>
-</head>
-<body>
+
+{% extends "base.html" %}
+
+
+{% block main %}
+
 Привет, ваш email: {{email}}, имя: {{username}} ваш пароль: {{password}} УРА!
-</body>
-</html>
+
+{% endblock %}

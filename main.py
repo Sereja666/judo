@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 from fastapi import APIRouter, Request, Form, HTTPException, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, HTMLResponse
-
+from fastapi.staticfiles import StaticFiles
 from config import DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME
 from scr.auth.database import User
 from scr.auth.manager import get_user_manager
@@ -21,6 +21,8 @@ from scr.auth.schemas import UserRead, UserCreate
 
 app = FastAPI(title='Judo',
               description=f'подключена БД - {DB_HOST}:{DB_PORT}')
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 engine = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 

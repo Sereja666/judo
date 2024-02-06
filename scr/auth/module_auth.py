@@ -3,6 +3,7 @@ from fastapi_users.authentication import AuthenticationBackend, BearerTransport,
 from config import SECRET
 
 cookie_transport = CookieTransport(cookie_max_age=3600)
+print(cookie_transport)
 
 
 
@@ -17,3 +18,5 @@ auth_backend = AuthenticationBackend(
     transport=cookie_transport,
     get_strategy=get_jwt_strategy,
 )
+
+

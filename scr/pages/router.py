@@ -15,11 +15,11 @@ async def login_form(request: Request):
     return templates.TemplateResponse("sign_in.html", {"request": request})
 
 
-
-@router.post("/login")
-def login(request: Request, email: str = Form(...), password: str = Form(...), ):
-    redirect_url = f"/user?email={email}&password={password}"
-    return RedirectResponse(redirect_url)
+#
+# @router.post("/login")
+# def login(request: Request, email: str = Form(...), password: str = Form(...), ):
+#     redirect_url = f"/user?email={email}&password={password}"
+#     return RedirectResponse(redirect_url)
 
 
 

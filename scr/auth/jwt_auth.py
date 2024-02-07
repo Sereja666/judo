@@ -16,6 +16,8 @@ from fastapi.security import (
 )
 from jwt.exceptions import InvalidTokenError
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse, HTMLResponse
+
 
 templates = Jinja2Templates(directory='scr/templates')
 
@@ -48,7 +50,7 @@ users_db: dict[str, UserSchema] = {
 }
 
 
-def validate_auth_user(request: Request, response: Response,
+def validate_auth_user(
         username: str = Form(),
         password: str = Form(),
 ):
@@ -133,10 +135,15 @@ def auth_user_issue_jwt(
         # "logged_in_at"
     }
     token = auth_utils.encode_jwt(jwt_payload)
-    return TokenInfo(
+    TokenInfo(
         access_token=token,
         token_type="Bearer",
-    )
+    ),
+    # return TokenInfo(
+    #     access_token=token,
+    #     token_type="Bearer",
+    # ), RedirectResponse("/users/me/")
+    return  RedirectResponse("/jwt/mainpage/", status_code=302)
 
 
 @router.get("/users/me/")
@@ -150,3 +157,9 @@ def auth_user_check_self_info(
         "email": user.email,
         "logged_in_at": iat,
     }
+
+@router.get("/mainpage/")
+async def main_page(request: Request):
+
+    # return HTMLResponse('main_page.html')
+    return templates.TemplateResponse('main_page.html', {"request": request})

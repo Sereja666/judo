@@ -1,3 +1,4 @@
+# from main import templates
 from scr.auth import utils as auth_utils
 from scr.auth.schemas import UserSchema
 from pydantic import BaseModel
@@ -6,7 +7,7 @@ from fastapi import (
     Depends,
     Form,
     HTTPException,
-    status,
+    status, Request, Response
 )
 from fastapi.security import (
     # HTTPBearer,
@@ -14,6 +15,9 @@ from fastapi.security import (
     OAuth2PasswordBearer,
 )
 from jwt.exceptions import InvalidTokenError
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory='scr/templates')
 
 # http_bearer = HTTPBearer()
 oauth2_scheme = OAuth2PasswordBearer(
@@ -44,7 +48,7 @@ users_db: dict[str, UserSchema] = {
 }
 
 
-def validate_auth_user(
+def validate_auth_user(request: Request, response: Response,
         username: str = Form(),
         password: str = Form(),
 ):
@@ -79,7 +83,7 @@ def get_current_token_payload(
         payload = auth_utils.decode_jwt(
             token=token,
         )
-    except JWTException as e:
+    except InvalidTokenError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"invalid token error: {e}",
@@ -109,6 +113,12 @@ def get_current_active_auth_user(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="user inactive",
     )
+
+
+@router.get("/login/", response_model=TokenInfo)
+def auth_start(request: Request):
+
+    return  templates.TemplateResponse("sign_in.html", {"request": request})
 
 
 @router.post("/login/", response_model=TokenInfo)
